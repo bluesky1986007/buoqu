@@ -54,7 +54,7 @@ public class Login {
 	  se.waitForPageToLoad("30000");
 	  //检核
 	  Assert.assertEquals("注册", se.getTitle());  
-	  System.out.println("testaaaaaaaaaaa");
+
   }
   
    
