@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Login>
+
+<pageVerify>
+<logPageTitle>登入页</logPageTitle>
+<regLinkText> 用户注册</regLinkText>
+<regPageTitle>注册</regPageTitle>
+</pageVerify>
+
+</Login>

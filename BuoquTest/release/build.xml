@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="selenium" default="Report" basedir=".">
+    <property name="src.dir" value="src" />
+    <property name="dest.dir" value="classes" />
+    <!--specify directory path-->
+    <property name="lib.dir" value="${basedir}/lib"/>
+	<property name="output.dir" value="${basedir}/test-output"/>
+	<property name="reports.dir" value="${basedir}/reports"/>
+ 	<tstamp>
+ 	   <format property="date" pattern="yyyy-MM-dd HH.mm.ss" />
+ 	</tstamp>	
+    <path id="compile.path">
+        <fileset dir="${lib.dir}/">
+            <include name="**/*.jar" />
+        </fileset>        
+        <pathelement location="${src.dir}"/>
+        <pathelement location="${dest.dir}_${date}" />
+    </path>
+	
+	<!--create directory where complied classes files are stored-->
+    <target name="init">
+        <mkdir dir="${dest.dir}_${date}" />
+    </target>
+	
+    <target name="compile" depends="init">
+        <javac encoding="UTF-8" srcdir="${src.dir}" destdir="${dest.dir}_${date}" classpathref="compile.path" />
+    </target>
+	
+     <!--run testng ant task-->
+       
+    <target name="Report" depends="compile"> 
+        <!-- <antcall target="clean" /> -->
+        <antcall target="toRelease" />
+    </target>
+	
+   <taskdef resource="testngtasks" classpath="${lib.dir}/testng.jar" />
+	
+	 <target name="run_tests" description="run tests">
+	
+	<testng classpathref="compile.path"> 
+	   <xmlfileset dir="${src.dir}" includes="testng.xml"/>
+	</testng>	     	
+  <antcall target="Report" />	 		 	
+  </target>	
+	
+
+	<!--
+	     <taskdef resource="testngtasks" classpath="${lib.dir}/testng.jar" /> 
+		 <target name="run_tests" depends="compile" description="run tests">
+	 	
+	 	<testng classpathref="compile.path"
+	 	        outputdir="${output.dir}_${date}"> 
+	 	   <xmlfileset dir="${src.dir}" includes="testng.xml"/>
+	 	</testng>	     	
+       <antcall target="Report" />	 		 	
+	 </target>	
+	
+	 	<target name="transform">
+		<echo message="going to optimize the test reports" />
+	     <xslt in="${basedir}/test-output_${date}/testng-results.xml" style="${basedir}/testng-results.xsl" out="${basedir}/test-output_${date}/TestReport.html" 
+	     	classpathref="compile.path">
+
+	         <param name="testNgXslt.outputDir" expression="${basedir}/test-output_${date}/" />
+	         <param name="testNgXslt.showRuntimeTotals" expression="true"/>
+
+	     </xslt>
+	 </target>
+	
+	
+	 	<target name="make_zip" depends="transform">
+	   <echo message="going to generate the TestReport" />
+	   <jar destfile="${reports.dir}/TestReport_${date}.zip" basedir="test-output_${date}" />
+	</target>
+		<target name="send-mail" depends="make_zip"> 
+		<echo message="going to send mail" />
+	    <mail mailhost="smtpcom.263xmail.com" user="Allen_lu@lecast.com.cn" password="Le123456"
+	    	subject="Test Reports">	    	  
+	        <from address="allen_lu@lecast.com.cn"/>
+	        <fileset dir="${reports.dir}"> 
+	           <include name="TestReport_${date}.zip" />
+	        </fileset>
+	        <to address="allen_lu@lecast.com.cn"/>
+	    	<message>  Test Reports as to the attachment,and the 'TestReport.html' in the zip is the overall of this test, thank you!</message>
+	    </mail>  
+	</target>	
+	
+    <target name="clean">
+	  <echo message="going to clean the temp directory" />		
+		 <delete dir="${dest.dir}_${date}"/>
+		 <delete dir="${output.dir}_${date}"/>
+    </target>
+	
+	 -->
+	
+	<target name="toRelease">
+	   <copy todir="${basedir}\release">
+		  <fileset dir="${basedir}" />
+		</copy>
+	    <antcall target="clean" />	
+	</target>
+	
+    <target name="clean">
+	  <echo message="going to clean" />		
+		 <delete dir="${dest.dir}_${date}"/>
+    </target>
+	
+</project>
