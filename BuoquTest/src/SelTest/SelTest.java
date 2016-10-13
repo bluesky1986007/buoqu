@@ -50,7 +50,6 @@ public class SelTest{
 			selenium = new DefaultSelenium("localhost",4444, "*firefox", "http://192.168.0.61/buoqu");
 //			selenium.start();
 			
-			System.out.println("test");
 
 			
 		} catch (Exception e) {
