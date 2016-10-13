@@ -51,6 +51,8 @@ public class SelTest{
 //			selenium.start();
 			
 			
+			System.out.println("testaa");
+			
 
 			
 		} catch (Exception e) {
